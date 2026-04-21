@@ -76,21 +76,21 @@ public class MongoConnectionRegister implements BeanDefinitionRegistryPostProces
         }
 
         try {
-            registerMongoBeans(registry, environment, connection, StringUtils.join(connection, MongoConstants.SUFFIX_MONGO_PROPERTIES_URI), primaryControl);
+            registerMongoBeans(registry, environment, connection, StringUtils.join(connection, MongoConstants.SUFFIX_MONGO_PROPERTIES), primaryControl);
         } catch (Exception e) {
             throw new MongoConnectionManagerException("Failed to configure mongo connection for: " + connection, e);
         }
     }
 
-    private void registerMongoBeans(BeanDefinitionRegistry registry, ConfigurableEnvironment environment, String connection, String connectionURIPropertyName, PrimaryControl primaryControl) {
+    private void registerMongoBeans(BeanDefinitionRegistry registry, ConfigurableEnvironment environment, String connection, String prefix, PrimaryControl primaryControl) {
         Function<String, MongoProperties> mongoPropertiesSupplier = ps -> Binder.get(environment)
-                .bind(ps, MongoProperties.class)
-                .orElseThrow(() -> new IllegalStateException("Missing properties for: " + ps));
+                .bind(prefix, MongoProperties.class)
+                .orElseThrow(() -> new IllegalStateException("Missing properties for: " + prefix));
 
         UnaryOperator<String> generateBeanName = suffix -> connection + suffix;
-        MongoProperties properties = mongoPropertiesSupplier.apply(connectionURIPropertyName);
+        MongoProperties properties = mongoPropertiesSupplier.apply(prefix);
 
-        String propertiesBeanName = generateBeanName.apply(MongoConstants.SUFFIX_MONGO_PROPERTIES_URI);
+        String propertiesBeanName = generateBeanName.apply(MongoConstants.SUFFIX_MONGO_PROPERTIES);
         registry.registerBeanDefinition(propertiesBeanName,
                 createPropertiesBeanDefinition(() -> properties, primaryControl));
 
