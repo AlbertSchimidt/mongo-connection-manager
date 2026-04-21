@@ -8,7 +8,7 @@ public class MongoConstants {
     public final String MONGO_CONNECTION_MANAGER = "mongo-connection-manager";
     public final String MONGO_CONNECTION_MANAGER_LOG = "[" + MONGO_CONNECTION_MANAGER + "] ";
 
-    public final String SUFFIX_MONGO_PROPERTIES_URI = ".mongo.uri";
+    public final String SUFFIX_MONGO_PROPERTIES = ".mongo";
 
     public final String MONGO_CONNECTIONS_TO_USE_PROPERTY_NAME = "mongo.connections.to.use";
 
